@@ -48,7 +48,7 @@ export const Entry = () => {
     }
     return (
         <div className="entry-page bg-info">
-            <Jumbotron className="form-box">
+            <Jumbotron fluid className="form-box">
                 {frmLoad === 'login' && (<LoginForm 
                     handleOnChange={handleOnChange}
                     email={email} 
