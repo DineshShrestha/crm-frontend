@@ -1,57 +1,105 @@
-import React from 'react'
-import { Button, Col, Container, Form, Row } from 'react-bootstrap'
-import PropTypes from 'prop-types'
+import React,{useState} from "react";
+import { Button, Col, Container, Form, Row, Spinner, Alert } from "react-bootstrap";
+import PropTypes from "prop-types";
+import {useDispatch, useSelector} from 'react-redux'
+import { loginPending, loginSuccess, loginFail } from './loginSlice'
+import {userLogin} from '../../api/userApi'
+import {useHistory} from 'react-router-dom'
+const LoginForm = ({ formSwitcher }) => {
 
-const LoginForm = ({handleOnChange, email, pass, handleOnSubmit, formSwitcher}) => {
-    return (
-            <Container>
-                <Row>
-                    <Col>
-                        <h1 className="text-info text-center">Client login</h1>
-                        <hr/>
-                        <Form autoComplete="off" onSubmit={handleOnSubmit}>
-                            <Form.Group>
-                                <Form.Label>Email Address</Form.Label>
-                                <Form.Control
-                                    type="email"
-                                    name="email"
-                                    value={email}
-                                    onChange={handleOnChange}
-                                    placeholder="Enter email"  
-                                   required
-                                    />
-                            </Form.Group>
-                            <Form.Group>
-                                <Form.Label>Password</Form.Label>
-                                <Form.Control
-                                    type="password"
-                                    name="password"
-                                    onChange={handleOnChange}
-                                    value={pass}
-                                    placeholder="Enter password"
-                                    required
-                                    /><br/>
-                            </Form.Group>
-                            <Button type="submit" >Login</Button>
-                        </Form>
-                        <hr/>
-                    </Col>
-                </Row>
-                <Row>
-                    <Col>
-                    <a href="#!" onClick={()=>formSwitcher('reset')}>Forget Password?</a>
-                    </Col>
-                </Row><br/>
-            </Container>
-    )
-}
+    const dispatch = useDispatch()
+    const history = useHistory()
+    const {isLoading, isAuth, error} = useSelector(state=>state.login)
+  const [email, setEmail] = useState("rames@gmail.com");
+  const [password, setPassword] = useState("pasord13");
 
-LoginForm.propTypes = {
-    handleOnChange: PropTypes.func.isRequired,
-    handleOnSubmit: PropTypes.func.isRequired,
-    formSwitcher: PropTypes.func.isRequired,
-    email:PropTypes.string.isRequired,
-    pass:PropTypes.string.isRequired
+  const handleOnChange = (e) => {
+    const { name, value } = e.target;
+    switch (name) {
+      case "email":
+        setEmail(value);
+        break;
+      case "password":
+        setPassword(value);
+        break;
+      default:
+        break;
+    }
+  };
+
+  const handleOnSubmit =async (e) => {
+    e.preventDefault();
+    if (!email || !password) {
+      return alert("Please fill in the form");
+    }
+
+    dispatch(loginPending())
+
+    //call APi
+    try {
+        
+        const isAuth = await userLogin({email, password})
+        if(isAuth.status === 'error'){
+            return dispatch(loginFail(isAuth.message))
+        }
+        dispatch(loginSuccess())
+        history.push("/dashboard")
+    } catch (error) {
+       dispatch(loginFail(error.message)) 
+    }
+  };
+
+  return (
+    <Container>
+      <Row>
+        <Col>
+          <h1 className="text-info text-center">Client login</h1>
+          <hr />
+          {error && <Alert variant="danger">{error}</Alert>}
+          <Form autoComplete="off" onSubmit={handleOnSubmit}>
+            <Form.Group>
+              <Form.Label>Email Address</Form.Label>
+              <Form.Control
+                type="email"
+                name="email"
+                value={email}
+                onChange={handleOnChange}
+                placeholder="Enter email"
+                required
+              />
+            </Form.Group>
+            <Form.Group>
+              <Form.Label>Password</Form.Label>
+              <Form.Control
+                type="password"
+                name="password"
+                onChange={handleOnChange}
+                value={password}
+                placeholder="Enter password"
+                required
+              />
+              <br />
+            </Form.Group>
+            <Button type="submit">Login</Button>
+            {isLoading && <Spinner variant="primary" animation="border"/>}
+          </Form>
+          <hr />
+        </Col>
+      </Row>
+      <Row>
+        <Col>
+          <a href="/password-reset">Forget Password?</a>
+        </Col>
+      </Row>
+      <br />
+    </Container>
+  );
 };
 
-export default LoginForm
+LoginForm.propTypes = {
+
+  formSwitcher: PropTypes.func.isRequired,
+ 
+};
+
+export default LoginForm;

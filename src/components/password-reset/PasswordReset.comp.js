@@ -29,7 +29,7 @@ const ResetPassword = ({handleOnChange, email, handleOnResetSubmit, formSwitcher
                 </Row>
                 <Row>
                     <Col>
-                    <a href="#!" onClick={()=>formSwitcher("login")}>Login now</a>
+                    <a href="/" >Login now</a>
                     </Col>
                 </Row><br/>
             </Container>

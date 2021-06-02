@@ -1,9 +1,9 @@
 import React, {useState} from 'react'
-import './entry.style.css'
+
 import {Jumbotron} from 'react-bootstrap'
 import LoginForm from '../../components/login/Login.comp'
 import ResetPassword from '../../components/password-reset/PasswordReset.comp'
-
+import './passwordOtpForm.style.css'
 //workflow
 //. create password reset page
 //. add request OTP form
@@ -14,12 +14,44 @@ import ResetPassword from '../../components/password-reset/PasswordReset.comp'
 //. Connect to API Endpoint (API is already created)
 //. Add reducer through Redux toolkit to handle the network status and provide the feedback to the user
 //. Send email, OTP and new password to update the password
-export const Entry = () => {
+export const PasswordOtpForm = () => {
+    const [email, setEmail] = useState('rames@gmail.com');
+    const [password, setPassword] = useState('pasord13');
     const [frmLoad, setFrmLoad] = useState('login');
+
+   const handleOnChange = (e)=>{
+        const {name, value} = e.target
+        switch(name){
+            case 'email':
+                setEmail(value)
+                break;
+            case 'password':
+                setPassword(value)
+                break;
+            default:
+                break;
+        }
+        
+    }
+
+    const handleOnSubmit = (e)=>{
+        e.preventDefault()
+        if(!email || !password){
+           return alert("Please fill in the form")
+        }
+
+        //todo call api to submit the form 
+        console.log(email, password)
+    }
 
     const handleOnResetSubmit = (e)=>{
         e.preventDefault()
-       
+        if(!email){
+           return alert("Please enter email")
+        }
+
+        //todo call api to submit the form 
+        console.log(email)
     }
 
     const formSwitcher = frmtype =>{
@@ -27,18 +59,10 @@ export const Entry = () => {
     }
     return (
         <div className="entry-page bg-info">
-            <Jumbotron className="form-box">
-                {frmLoad === 'login' && (<LoginForm 
-                   
-                   
-                    formSwitcher={formSwitcher}
-                />)} 
-                {frmLoad==='reset' && (<ResetPassword 
-                    //handleOnChange={handleOnChange}
-                    //email={email} 
+            <Jumbotron fluid className="form-box">
+              <ResetPassword 
                     handleOnResetSubmit={handleOnResetSubmit}
-                    formSwitcher={formSwitcher}
-                /> )}
+                         /> 
             </Jumbotron> 
         </div>
     )
