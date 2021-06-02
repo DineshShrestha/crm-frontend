@@ -1,17 +1,22 @@
-import React,{useState} from "react";
+import React,{useState, useEffect} from "react";
 import { Button, Col, Container, Form, Row, Spinner, Alert } from "react-bootstrap";
 import PropTypes from "prop-types";
 import {useDispatch, useSelector} from 'react-redux'
 import { loginPending, loginSuccess, loginFail } from './loginSlice'
 import {userLogin} from '../../api/userApi'
 import {useHistory} from 'react-router-dom'
+
+import {getUserProfile} from '../../pages/dashboard/userActions'
 const LoginForm = ({ formSwitcher }) => {
 
     const dispatch = useDispatch()
     const history = useHistory()
-    const {isLoading, isAuth, error} = useSelector(state=>state.login)
+    const {isLoading,isAuth, error} = useSelector(state=>state.login)
+    useEffect(()=>{
+      (sessionStorage.getItem('accessJWT')) && history.push('/dashboard')
+    },[ history, isAuth])
   const [email, setEmail] = useState("rames@gmail.com");
-  const [password, setPassword] = useState("pasord13");
+  const [password, setPassword] = useState("pasord123");
 
   const handleOnChange = (e) => {
     const { name, value } = e.target;
@@ -43,6 +48,7 @@ const LoginForm = ({ formSwitcher }) => {
             return dispatch(loginFail(isAuth.message))
         }
         dispatch(loginSuccess())
+        dispatch(getUserProfile())
         history.push("/dashboard")
     } catch (error) {
        dispatch(loginFail(error.message)) 
