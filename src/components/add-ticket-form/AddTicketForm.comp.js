@@ -5,6 +5,7 @@ import {shortText} from '../../utils/validations'
 //import PropTypes from 'prop-types'
 import './add-ticket-form.style.css'
 import { openNewTicket } from "./addTicketAction";
+import { resetSuccessMsg } from "./addTicketSlicer";
 
 
 const initialFrmDt = {
@@ -27,7 +28,11 @@ const AddTicketForm = () => {
   const [frmDataError, setFrmDataError]= useState(initialFrmError)
 
   
-  useEffect(()=>{}, [frmData, frmDataError])
+  useEffect(()=>{
+    return ()=>{
+      successMsg && dispatch(resetSuccessMsg())
+    }
+  }, [frmData, frmDataError,dispatch])
 
   
   const handleOnChange = (e)=>{
