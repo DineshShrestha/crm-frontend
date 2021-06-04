@@ -1,15 +1,72 @@
 import axios from 'axios'
+
+const rootUrl = "http://localhost:3001/v1/"
+const getSingleTicketUrl = rootUrl + "ticket/"
+const closeTicketUrl = rootUrl + "ticket/close-ticket/"
+
 export const getAlltickets = () => {
     return new Promise(async(resolve, reject) => {
         try {
             const result = await axios.get(
-                'http://localhost:3001/v1/ticket', {
+                rootUrl + 'ticket', {
                     headers: {
-                        Authorization: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InJhbWVzQGdtYWlsLmNvbSIsImlhdCI6MTYyMjQ2NDUzOSwiZXhwIjoxNjIyNDY2MzM5fQ.w8MPWOxvlO909kbAxFxcW0SKyw057Nsm-c-NBCjWcuc'
+                        Authorization: sessionStorage.getItem('accessJWT')
                     }
                 }
             )
             resolve(result)
+        } catch (error) {
+            reject(error)
+        }
+    })
+
+}
+
+
+export const getSingleTicket = (_id) => {
+    return new Promise(async(resolve, reject) => {
+        try {
+            const result = await axios.get(getSingleTicketUrl + _id, {
+                headers: {
+                    Authorization: sessionStorage.getItem('accessJWT')
+                }
+            })
+            console.log(_id)
+            resolve(result)
+        } catch (error) {
+            reject(error)
+        }
+    })
+
+}
+
+export const updateReplyTicket = (_id, msgObj) => {
+    return new Promise(async(resolve, reject) => {
+        try {
+            const result = await axios.put(getSingleTicketUrl + _id, msgObj, {
+                headers: {
+                    Authorization: sessionStorage.getItem('accessJWT')
+                },
+
+            })
+            resolve(result.data)
+        } catch (error) {
+            reject(error)
+        }
+    })
+
+}
+
+export const updateReplyTicketStatusClosed = (_id) => {
+    return new Promise(async(resolve, reject) => {
+        try {
+            const result = await axios.patch(closeTicketUrl + _id,{},{
+                headers: {
+                    Authorization: sessionStorage.getItem('accessJWT')
+                },
+
+            })
+            resolve(result.data)
         } catch (error) {
             reject(error)
         }
