@@ -1,13 +1,64 @@
-import React from "react";
-import { Form, Jumbotron, Row, Button, Col } from "react-bootstrap"
-import PropTypes from 'prop-types'
+import React, {useState, useEffect} from "react";
+import {useDispatch, useSelector} from 'react-redux'
+import { Form, Jumbotron, Row, Button, Col, Spinner, Alert } from "react-bootstrap"
+import {shortText} from '../../utils/validations'
+//import PropTypes from 'prop-types'
 import './add-ticket-form.style.css'
+import { openNewTicket } from "./addTicketAction";
 
-const AddTicketForm = ({ handleOnSubmit, handleOnChange, frmData, frmDataError }) => {
+
+const initialFrmDt = {
+  subject:"",
+  issueDate:"",
+  message:""
+}
+
+const initialFrmError = {
+  subject:false,
+  issueDate:false,
+  message:false
+}
+const AddTicketForm = () => {
+  const dispatch = useDispatch()
+  const {user:{name}} = useSelector(state=>state.user)
+  
+  const {isLoading, error, successMsg} = useSelector(state=>state.openTicket)
+  const [frmData, setFrmData]= useState(initialFrmDt)
+  const [frmDataError, setFrmDataError]= useState(initialFrmError)
+
+  
+  useEffect(()=>{}, [frmData, frmDataError])
+
+  
+  const handleOnChange = (e)=>{
+    const {name, value} = e.target    
+    setFrmData({
+        ...frmData,
+        [name]:value, 
+    })
+}
+
+const handleOnSubmit= async (e)=>{
+ e.preventDefault()
+ setFrmDataError(initialFrmError)
+ 
+ const isSubjectValid = await shortText(frmData.subject)
+setFrmDataError({
+     ...initialFrmError,
+     subject:!isSubjectValid,
+ })
+ dispatch(openNewTicket({...frmData, sender:name}))
+}
+
   return (
     <Jumbotron className="add-new-ticket mt-3 bg-light">
         <h1 className="text-info text-center">Add New Ticket</h1>
         <hr/>
+        <div>
+          {error && <Alert variant='danger'>{error}</Alert>}
+          {successMsg && <Alert variant='success'>{successMsg}</Alert>}
+          {isLoading && <Spinner variant='primary' animation="border"/>}
+        </div>
       <Form autoComplete="off" onSubmit={handleOnSubmit}>
         <Form.Group  as={Row}>
           <Form.Label column sm={3}>Subject</Form.Label>
@@ -37,11 +88,11 @@ const AddTicketForm = ({ handleOnSubmit, handleOnChange, frmData, frmDataError }
            </Col>
         </Form.Group>
         <Form.Group>
-          <Form.Label>Details</Form.Label>
+          <Form.Label>messages</Form.Label>
           <Form.Control
             as="textarea"
-            name="detail"
-            value={frmData.detail}
+            name="message"
+            value={frmData.message}
             onChange={handleOnChange}
             rows="5"
             required
@@ -49,7 +100,7 @@ const AddTicketForm = ({ handleOnSubmit, handleOnChange, frmData, frmDataError }
           <br />
         </Form.Group>
         <Button type="submit" variant="info" block>
-          submit
+          Open Ticket
         </Button>
       </Form>
     </Jumbotron>
@@ -57,10 +108,10 @@ const AddTicketForm = ({ handleOnSubmit, handleOnChange, frmData, frmDataError }
 };
 
 
-AddTicketForm.propTypes = {
-    handleOnSubmit:PropTypes.func.isRequired,
-    handleOnChange:PropTypes.func.isRequired,
-    frmData:PropTypes.object.isRequired, 
-}
+// AddTicketForm.propTypes = {
+//     handleOnSubmit:PropTypes.func.isRequired,
+//     handleOnChange:PropTypes.func.isRequired,
+//     frmData:PropTypes.object.isRequired, 
+// }
 
 export default AddTicketForm;

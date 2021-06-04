@@ -10,9 +10,9 @@ import { useDispatch, useSelector } from 'react-redux'
 
 const Ticket = () => {
     
-    const {replyMsg} = useSelector(state=>state.tickets)
+   
     const dispatch = useDispatch()
-    const {isLoading, error, selectedTicket} = useSelector(state=>state.tickets)
+    const {isLoading, error, selectedTicket, replyTicketError, replyMsg} = useSelector(state=>state.tickets)
     const {tId} = useParams()
   
 
@@ -32,6 +32,7 @@ const Ticket = () => {
                 <Col>
                     {isLoading && <Spinner variant="primary" animation="border"/>}
                     {error && <Alert variant="danger">{error}</Alert>}
+                    {replyTicketError && <Alert variant='success'>{replyTicketError}</Alert>}
                     {replyMsg && <Alert variant='success'>{replyMsg}</Alert>}
                 </Col>
             </Row>
