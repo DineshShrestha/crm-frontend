@@ -9,13 +9,18 @@ import Ticket from "./pages/ticket/Ticket.page";
 
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import PrivateRoute from "./components/private-route/PrivateRoute.comp";
+import {Registration} from "./pages/registration/Registration.page";
 function App() {
   return (
     <div className="App">
       <Router>
         <Switch>
-        <Route path="/" exact>
+        
+          <Route path="/" exact>
             <Entry />
+          </Route>
+          <Route path="/registration" exact>
+            <Registration/>
           </Route>
           <Route path="/password-reset" exact>
             <PasswordOtpForm />
