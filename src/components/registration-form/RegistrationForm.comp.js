@@ -1,14 +1,16 @@
 import React, {useState, useEffect} from "react";
-import { Container, Row, Col, Form, Button } from "react-bootstrap";
+import { Container, Row, Col, Form, Button, Spinner, Alert } from "react-bootstrap";
+import {useDispatch, useSelector} from 'react-redux'
+import { NewUserRegistration } from "./userRegAction";
 
 const initialState = {
-    name:'',
-    phone:'',
-    email:'',
-    company:'',
-    address:'',
-    password:'',
-    confirmPass:'',
+    name:'Dinesh',
+    phone:'23432423',
+    email:'dneshshrestha@gmail.com',
+    company:'D comp',
+    address:'Trovik',
+    password:'Hello1234%',
+    confirmPass:'Hello1234%',
 }
 const passVerification = {
     isLengthy:false,
@@ -19,10 +21,12 @@ const passVerification = {
     confirmPass:false
 }
 export const RegistrationForm = () => {
-  
-    const [newUser, setNewUser] = useState('')
+  const dispatch = useDispatch()
+    const [newUser, setNewUser] = useState(initialState)
     
     const [passwordError, setpasswordError] = useState(passVerification)
+
+    const {isLoading, status, message} = useSelector(state => state.registration)
     useEffect(()=>{}, [newUser])
     const handleOnChange = (e)=>{
         const {name, value} = e.target
@@ -47,8 +51,13 @@ export const RegistrationForm = () => {
 
     const handleOnSubmit = (e)=>{
       e.preventDefault()
-      console.log(newUser)
+      //console.log(newUser)
+      dispatch(NewUserRegistration(newUser))
     }
+
+    //connect user registration form to backend  REST API and manage network state with Redux toolkit
+    // email user to a a link to verify their email
+    // create frontend page to handle the email verification that client receives in their email
 
   return (
     <Container fluid>
@@ -58,6 +67,9 @@ export const RegistrationForm = () => {
         </Col>
       </Row>
       <hr />
+      <Row>
+        {message && <Alert variant={status === "success" ? 'success': 'danger'}>{message}</Alert>}
+      </Row>
       <Row>
         <Col>
           <Form onSubmit={handleOnSubmit}>
@@ -93,7 +105,7 @@ export const RegistrationForm = () => {
               <Form.Control type="password" name="ConfirmPass" value={newUser.confirmPass} onChange={handleOnChange} placeholder="Confirm Password" />
             </Form.Group>
             <Form.Text>
-                {passwordError.confirmPass && ( <div className="text-danger mb-3">Password did not match</div> )}
+                {!passwordError.confirmPass && ( <div className="text-danger mb-3">Password did not match</div> )}
             </Form.Text>
             <ul className="mb-4 mt-2">
                 <li className={passwordError.isLengthy ? "text-success": "text-danger"}>Min 8 characters</li>
@@ -105,6 +117,8 @@ export const RegistrationForm = () => {
             <Button variant="primary" type="submit" className="mt-3" disabled={Object.values(passwordError).includes(false)}>
               Submit
             </Button>
+            {isLoading &&  <Spinner variant="info" animation="border"/>}
+           
           </Form>
         </Col>
       </Row>
