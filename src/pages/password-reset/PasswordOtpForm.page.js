@@ -1,7 +1,7 @@
 import React, {useState} from 'react'
 
-import {Jumbotron} from 'react-bootstrap'
-import LoginForm from '../../components/login/Login.comp'
+import {Container} from 'react-bootstrap'
+//import LoginForm from '../../components/login/Login.comp'
 import ResetPassword from '../../components/password-reset/PasswordReset.comp'
 import './passwordOtpForm.style.css'
 //workflow
@@ -59,11 +59,11 @@ export const PasswordOtpForm = () => {
     }
     return (
         <div className="entry-page bg-info">
-            <Jumbotron fluid className="form-box">
+            <Container fluid className="form-box">
               <ResetPassword 
                     handleOnResetSubmit={handleOnResetSubmit}
                          /> 
-            </Jumbotron> 
+            </Container> 
         </div>
     )
 }

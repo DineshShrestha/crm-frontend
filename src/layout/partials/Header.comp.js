@@ -1,16 +1,16 @@
 import React from 'react'
 import {Navbar, Nav} from 'react-bootstrap'
 import logo from '../../assets/img/logo.png'
-import {useHistory} from 'react-router-dom'
+import { useNavigate} from 'react-router-dom'
 import {LinkContainer} from 'react-router-bootstrap'
 import {userLogout} from '../../api/userApi'
 const Header = () => {
-    const history = useHistory()
+    const navigate = useNavigate()
     const logMeOut = ()=>{
         sessionStorage.removeItem("accessJWT")
         localStorage.removeItem("crmSite")
         userLogout()
-        history.push('/')
+        navigate('/')
     }
     
     return ( <Navbar collapseOnSelect bg="info" variant="dark" expand="md">

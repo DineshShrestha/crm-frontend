@@ -7,40 +7,51 @@ import AddTicket from "./pages/new-ticket/AddTicket.page";
 import TicketLists from "./pages/ticket-list/TicketLists.page";
 import Ticket from "./pages/ticket/Ticket.page";
 
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import PrivateRoute from "./components/private-route/PrivateRoute.comp";
 import {Registration} from "./pages/registration/Registration.page";
 function App() {
   return (
     <div className="App">
-      <Router>
-        <Switch>
-        
-          <Route path="/" exact>
-            <Entry />
-          </Route>
-          <Route path="/registration" exact>
-            <Registration/>
-          </Route>
-          <Route path="/password-reset" exact>
-            <PasswordOtpForm />
-          </Route>
-            <PrivateRoute path="/dashboard">
-              <Dashboard />
-            </PrivateRoute>
-            <PrivateRoute path="/add-ticket">
-              <AddTicket />
-            </PrivateRoute>
-            <PrivateRoute path="/tickets">
-              <TicketLists />
-            </PrivateRoute>
-            <PrivateRoute path="/ticket/:tId">
-              <Ticket />
-            </PrivateRoute>
-          
-          
-        </Switch>
-      </Router>
+     <Router>
+  <Routes>
+    <Route path="/" element={<Entry />} />
+    <Route path="/registration" element={<Registration />} />
+    <Route path="/password-reset" element={<PasswordOtpForm />} />
+    <Route
+      path="/dashboard"
+      element={
+        <PrivateRoute>
+          <Dashboard />
+        </PrivateRoute>
+      }
+    />
+    <Route
+      path="/add-ticket"
+      element={
+        <PrivateRoute>
+          <AddTicket />
+        </PrivateRoute>
+      }
+    />
+    <Route
+      path="/tickets"
+      element={
+        <PrivateRoute>
+          <TicketLists />
+        </PrivateRoute>
+      }
+    />
+    <Route
+      path="/ticket/:tId"
+      element={
+        <PrivateRoute>
+          <Ticket />
+        </PrivateRoute>
+      }
+    />
+  </Routes>
+</Router>
     </div>
   );
 }

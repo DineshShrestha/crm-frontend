@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from "react";
 import {useDispatch, useSelector} from 'react-redux'
-import { Form, Jumbotron, Row, Button, Col, Spinner, Alert } from "react-bootstrap"
+import { Form, Container, Row, Button, Col, Spinner, Alert } from "react-bootstrap"
 import {shortText} from '../../utils/validations'
 //import PropTypes from 'prop-types'
 import './add-ticket-form.style.css'
@@ -56,7 +56,7 @@ setFrmDataError({
 }
 
   return (
-    <Jumbotron className="add-new-ticket mt-3 bg-light">
+    <Container className="add-new-ticket mt-3 bg-light">
         <h1 className="text-info text-center">Add New Ticket</h1>
         <hr/>
         <div>
@@ -108,7 +108,7 @@ setFrmDataError({
           Open Ticket
         </Button>
       </Form>
-    </Jumbotron>
+    </Container>
   );
 };
 

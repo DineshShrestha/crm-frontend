@@ -1,6 +1,6 @@
 import React, {useState} from 'react'
 import './entry.style.css'
-import {Jumbotron} from 'react-bootstrap'
+import {Container} from 'react-bootstrap'
 import LoginForm from '../../components/login/Login.comp'
 import ResetPassword from '../../components/password-reset/PasswordReset.comp'
 
@@ -27,7 +27,7 @@ export const Entry = () => {
     }
     return (
         <div className="entry-page bg-info">
-            <Jumbotron className="form-box">
+            <Container className="form-box">
                 {frmLoad === 'login' && (<LoginForm 
                    
                    
@@ -39,7 +39,7 @@ export const Entry = () => {
                     handleOnResetSubmit={handleOnResetSubmit}
                     formSwitcher={formSwitcher}
                 /> )}
-            </Jumbotron> 
+            </Container> 
         </div>
     )
 }

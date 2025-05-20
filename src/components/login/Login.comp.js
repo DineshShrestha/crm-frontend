@@ -4,17 +4,17 @@ import PropTypes from "prop-types";
 import {useDispatch, useSelector} from 'react-redux'
 import { loginPending, loginSuccess, loginFail } from './loginSlice'
 import {userLogin} from '../../api/userApi'
-import {useHistory} from 'react-router-dom'
+import {useNavigate} from 'react-router-dom'
 
 import {getUserProfile} from '../../pages/dashboard/userActions'
 const LoginForm = ({ formSwitcher }) => {
 
     const dispatch = useDispatch()
-    const history = useHistory()
+    const navigate = useNavigate();
     const {isLoading,isAuth, error} = useSelector(state=>state.login)
     useEffect(()=>{
-      (sessionStorage.getItem('accessJWT')) && history.push('/dashboard')
-    },[ history, isAuth])
+      (sessionStorage.getItem('accessJWT')) && navigate('/dashboard')
+    },[ navigate, isAuth])
   const [email, setEmail] = useState("rames@gmail.com");
   const [password, setPassword] = useState("pasord123");
 
@@ -49,7 +49,7 @@ const LoginForm = ({ formSwitcher }) => {
         }
         dispatch(loginSuccess())
         dispatch(getUserProfile())
-        history.push("/dashboard")
+        navigate("/dashboard")
     } catch (error) {
        dispatch(loginFail(error.message)) 
     }
